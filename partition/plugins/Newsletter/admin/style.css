@@ -1,0 +1,22 @@
+fieldset
+{
+	border:1px #CCC	solid;
+}
+fieldset p
+{
+	margin:20px 0;
+}
+ul,li{
+	list-style:none;
+}
+fieldset li
+{
+	padding:5px 0;
+	line-height: 2em;
+}
+fieldset input[type="text"]
+{
+	width:300px;
+}
+fieldset span{ color:#F00;}
+

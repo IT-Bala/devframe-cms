@@ -1,0 +1,14 @@
+<IfModule mod_rewrite.c>
+    Options +FollowSymLinks
+    RewriteEngine on
+    RewriteCond %{REQUEST_METHOD} ^TRAC[EK]
+    RewriteRule .* - [L,R=405]
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-l
+    RewriteRule .* page.php [L]
+	Options -Indexes
+</IfModule>
+<IfModule mod_php5.c>
+php_value short_open_tag 1
+</IfModule>

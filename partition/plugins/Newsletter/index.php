@@ -1,0 +1,1 @@
+welcome to newsletter plugin

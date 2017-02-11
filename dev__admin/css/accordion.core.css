@@ -1,0 +1,226 @@
+ul.accordion,
+ol.accordion {
+    margin: 0;
+    padding: 0;
+}
+.accordion li {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+.accordion li:after {
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+    *zoom: 1;
+}
+.accordion li li {
+    list-style-type: disc;
+    margin-left: 1em;
+}
+.accordion a {
+    color: inherit;
+    text-decoration: inherit;
+}
+.accordion .loading {
+    display: none;
+}
+.Button
+{
+	border:none;
+	border-radius:3px;
+	padding:4px;
+	background: -moz-linear-gradient(center top , #E6E7E6, #D3D5D3) no-repeat scroll 0 0 #ccc;
+    border-bottom: 1px solid #ccc;
+    border-top: 1px solid #ccc;
+	cursor:pointer;
+}
+.Button a
+{
+	text-decoration:none;
+	color:#000;
+}
+.textbox
+{
+	width:400px;
+	font: 13px "helvetica neue", arial, sans-serif;
+}
+.title-box
+{
+	width:100%;
+	border:none;
+	border-radius:2px;
+	padding:5px;
+	margin:1px 0 5px 0;
+	background: -moz-linear-gradient(center top , #80B3E6, #3C6FA2); 
+	background: -ms-gradient(center top , #80B3E6, #3C6FA2);
+	background: -o-gradient(center top , #80B3E6, #3C6FA2);
+	background: #369 -webkit-gradient(linear, left top, left bottom, from(#69c), to(#369)) no-repeat;
+}
+.title-box h2
+{
+	text-shadow: 0 2px 2px #444;
+	color:#fff;
+}
+#example4
+{
+	float:left;
+	margin:0 5px 0 0;
+}
+#container
+{
+	float:left;
+	width:78.3%;
+	min-height:450px;
+}
+.dash_count
+{
+	height:auto;
+	
+}
+.dash_count_table
+{
+	border:1px #ccc solid;
+	border-radius:5px 5px 0 0;
+}
+.tr_th th
+{
+	border-bottom:1px #ccc solid;
+	/*background:#ccc;*/
+	background: -moz-linear-gradient(center top , #F7F7F7, #ECECEC);
+	border-radius:5px 5px 0 0;
+	padding:5px 5px 5px 20px;
+}
+.dash_count_table td
+{
+	background: -moz-linear-gradient(center top , #F7F7F7, #ECECEC);
+	padding:5px 5px 5px 20px;
+	border-bottom:1px #ccc solid;
+}
+.error{
+	color:#000;
+	padding:5px 20px;
+	background:url("../img/error.png") no-repeat scroll 2px 4px #FFDCDC;
+	background-color:#FFAAAA;
+	border:1px #FF4848 solid;
+}
+.success{
+	color:#000;
+	padding:5px 20px;
+	background:url("../img/success.png") no-repeat scroll 2px 4px #F0FFF0;
+	background-color:#F0FFF0;
+	border:1px #00D700 solid;
+	position: relative;
+    z-index: 999;
+}
+/* session popup */
+#session_popup{
+	background: none repeat scroll 0 0 #FFFFFF;
+	border:1px #CCC solid;
+    border-radius: 5px 5px 5px 5px;
+    box-shadow: 1px 100px 100px #999;
+    width: 600px;
+	left: 220px;
+    padding-bottom: 2px;
+    position: fixed;
+    top: 150px;
+	z-index:9999;
+}
+
+#popup-header {
+    background: url(../img/pop-h_bg.png) repeat scroll 0 0 transparent;
+    border-bottom: 1px solid #CCCCCC;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    padding: 18px 18px 14px;
+}
+#popup-header h2 {
+    color: #444444;
+    font-size: 2em;
+    font-weight: 700;
+    margin-bottom: 3px;
+	padding: 0;
+    text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.5);
+}
+.modal_close {
+    background: url(../img/popup-close.png) no-repeat scroll 0 0 transparent;
+    display: block;
+    height: 14px;
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    width: 14px;
+    z-index: 2;
+}
+.line {
+    background-color: #D7D7D7;
+    height: 1px;
+    margin: 20px 0 20px 30px;
+    width: 365px;
+}
+.in_popup {
+    background-color: #FFFFFF;
+    margin: 30px auto;
+    width: 430px;
+}
+.in_popup input[type="submit"] {
+    border-radius: 3px 3px 3px 3px;
+}
+.in_popup input[type="submit"] {
+    box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.25) inset;
+    color: #FFFFFF;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.3);
+}
+
+.in_popup input[type="text"], input[type="password"] {
+    background-color: #F2F2F2;
+    border: 1px solid #C8C8C8;
+    color: #838383;
+    font-size: 15px;
+    margin: 10px 0 0;
+    padding: 10px 14px 12px;
+    width: 355px;
+}
+.form input[type="submit"] {
+    font-size: 15px;
+    padding: 8px 35px 10px;
+}
+.form input[type="submit"]:hover {
+    cursor: pointer;
+}
+.btn-sign-in {
+    margin: 30px 0 30px 125px;
+}
+.btn-register {
+    margin: 30px 0 30px 20px;
+}
+#tac-checkbox, label, .forgotten-password-link {
+    float: left;
+    margin-top: 40px;
+}
+.in_popup label {
+    line-height: 12px;
+    padding-left: 5px;
+}
+.in_popup .sign-link {
+    float: left;
+    margin: 40px 0 0 120px;
+    text-align: center;
+}
+.in_popup .error-box {
+    color: #FFFFFF;
+    display: none;
+    height: 70px;
+}
+.ie-placeholders {
+    display: none;
+}
+.btn-orange {
+    background: -moz-linear-gradient(center top , #FF8000, #FF5800) repeat scroll 0 0 transparent;
+    border: 1px solid #FF5800;
+}
+.btn-orange:hover {
+    background: -moz-linear-gradient(center top , #FF5800, #FF5800) repeat scroll 0 0 transparent;
+}

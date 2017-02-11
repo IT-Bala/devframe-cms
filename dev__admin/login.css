@@ -1,0 +1,206 @@
+
+body {
+    background-color: #006598;
+    color: #555555;
+    font-size: 13px;
+}
+* {
+    margin: 0;
+}
+.logo {
+    border: 0 none;
+    margin: 20px auto;
+    text-align: center;
+}
+.logo a
+{
+	text-decoration:none;
+}
+body, input, a, h1 {
+    font-family: 'Open Sans',sans-serif;
+}
+a {
+    color: #4F74BF;
+}
+a:hover {
+    text-decoration: none;
+}
+h1 {
+    color: #555555;
+    font-size: 20px;
+    margin: 0 0 10px 30px;
+    padding-top: 20px;
+}
+.line {
+    background-color: #D7D7D7;
+    height: 1px;
+    margin: 20px 0 20px 30px;
+    width: 365px;
+}
+.form {
+    background-color: #FFFFFF;
+    border-radius: 5px 5px 5px 5px;
+    box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.25);
+    margin: 30px auto;
+    width: 430px;
+}
+.btn-facebook, .btn-twitter, form input[type="text"], input[type="password"], input[type="submit"] {
+    border-radius: 3px 3px 3px 3px;
+}
+.btn-facebook, .btn-twitter, input[type="submit"] {
+    box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.25) inset;
+    color: #FFFFFF;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.3);
+}
+.btn-facebook, .btn-twitter {
+    background-position: 5% 42%;
+    background-repeat: no-repeat;
+    float: left;
+    padding: 8px 14px 10px 30px;
+    text-decoration: none;
+}
+.btn-facebook {
+    background-color: #3F8FF2;
+    background-image: url("../design/fb-icon.png"), -moz-linear-gradient(center top , #3F8FF2, #4F74BF);
+    border: 1px solid #4F74BF;
+    margin-left: 30px;
+}
+.btn-facebook:hover {
+    background-color: #4F74BF;
+    background-image: url("../design/fb-icon.png"), -moz-linear-gradient(center top , #4F74BF, #4F74BF);
+}
+.btn-twitter {
+    background-color: #28C4FF;
+    background-image: url("../design/tw-icon.png"), -moz-linear-gradient(center top , #28C4FF, #00ACED);
+    border: 1px solid #00ACED;
+    margin-left: 10px;
+    padding-bottom: 10px;
+}
+.btn-twitter:hover {
+    background-color: #00ACED;
+    background-image: url("../design/tw-icon.png"), -moz-linear-gradient(center top , #00ACED, #00ACED);
+}
+.btn-facebook:active, .btn-twitter:active {
+    margin-bottom: -1px;
+    margin-top: 1px;
+}
+form {
+    margin: 0 0 0 30px;
+}
+form input[type="text"], input[type="password"] {
+    background-color: #F2F2F2;
+    border: 1px solid #C8C8C8;
+    color: #838383;
+    font-size: 15px;
+    margin: 10px 0 0;
+    padding: 10px 14px 12px;
+    width: 355px;
+}
+form input[type="submit"] {
+    font-size: 15px;
+    padding: 8px 35px 10px;
+}
+form input[type="submit"]:hover {
+    cursor: pointer;
+}
+.btn-sign-in {
+    margin: 30px 0 30px 125px;
+}
+.btn-register {
+    margin: 30px 0 30px 20px;
+}
+#tac-checkbox, label, .forgotten-password-link {
+    float: left;
+    margin-top: 40px;
+}
+label {
+    line-height: 12px;
+    padding-left: 5px;
+}
+.sign-link {
+    float: left;
+    margin: 40px 0 0 120px;
+    text-align: center;
+}
+.error-box {
+    color: #FFFFFF;
+    display: none;
+    height: 70px;
+}
+.error-message {
+    float: left;
+    margin: 24px 0 0 30px;
+}
+.red {
+    background-color: #D03E3E;
+}
+.green {
+    background-color: #72D03E;
+}
+.success-message {
+    line-height: 60px;
+    margin: 30px 0 0 30px;
+}
+.ipt-error {
+    background-color: #F4B4B4 !important;
+    border: 1px solid #D03E3E !important;
+    color: #333333 !important;
+}
+.ipt-error:-moz-placeholder {
+    color: #D03E3E;
+}
+.ipt-error::-moz-placeholder {
+    color: #D03E3E;
+}
+.ie-placeholders {
+    display: none;
+}
+.btn-orange {
+    background: -moz-linear-gradient(center top , #FF8000, #FF5800) repeat scroll 0 0 transparent;
+    border: 1px solid #FF5800;
+}
+.btn-orange:hover {
+    background: -moz-linear-gradient(center top , #FF5800, #FF5800) repeat scroll 0 0 transparent;
+}
+.btn-red {
+    background: -moz-linear-gradient(center top , #D82F2F, #CA0000) repeat scroll 0 0 transparent;
+    border: 1px solid #CA0000;
+}
+.btn-red:hover {
+    background: -moz-linear-gradient(center top , #CA0000, #CA0000) repeat scroll 0 0 transparent;
+}
+.btn-blue {
+    background: -moz-linear-gradient(center top , #3F8FF2, #4F74BF) repeat scroll 0 0 transparent;
+    border: 1px solid #4F74BF;
+}
+.btn-blue:hover {
+    background: -moz-linear-gradient(center top , #4F74BF, #4F74BF) repeat scroll 0 0 transparent;
+}
+.btn-green {
+    background: -moz-linear-gradient(center top , #73B845, #54AD19) repeat scroll 0 0 transparent;
+    border: 1px solid #54AD19;
+}
+.btn-green:hover {
+    background: -moz-linear-gradient(center top , #54AD19, #54AD19) repeat scroll 0 0 transparent;
+}
+.btn-magenta {
+    background: -moz-linear-gradient(center top , #B637C5, #A711B9) repeat scroll 0 0 transparent;
+    border: 1px solid #A711B9;
+}
+.btn-magenta:hover {
+    background: -moz-linear-gradient(center top , #A711B9, #A711B9) repeat scroll 0 0 transparent;
+}
+.btn-custom {
+}
+.btn-custom:hover {
+}
+.error
+{
+	color:#F00;
+	font-weight:bold;
+	padding:5px 0;
+}
+.login_error
+{
+	padding:0 0 0 30px;
+}
