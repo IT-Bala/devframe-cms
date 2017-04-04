@@ -546,7 +546,7 @@ function home(){ $return = false;
 	    $website_home = basename($_SERVER['REQUEST_URI']);
 	    $home = basename(getcwd());
 		$home_ = 'index.php';
-		if($website_home==$home or $website_home==$home_){
+		if($website_home==$home || $website_home==$home_ || $_SERVER['REQUEST_URI'] == '/'){ 
 				$return = true;	
 		}
 		return $return;
