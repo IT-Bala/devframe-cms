@@ -40,7 +40,7 @@ class page_assign extends left_menu{
 						if(file_exists($left_admin.'/index.php')){
 						require_once $left_admin.'/index.php';
 						if(num(DB_PREFIX."plugins where plugin='".$plugin."' and status=1")==1){
-						if(class_exists($GLOBALS['plugin_admin'][$i])){
+						if(class_exists($GLOBALS['plugin_admin'][$plugin_i])){
 						
 							$obj = new $GLOBALS['plugin_admin'][$plugin_i];
 							if(method_exists($GLOBALS['plugin_admin'][$plugin_i],'page')){
