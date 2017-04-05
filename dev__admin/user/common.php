@@ -305,7 +305,14 @@ class common extends page_assign{
 	public function plug_delete($pls){ $msg='';
 		$file_php = "../partition/plugins/".$_REQUEST['plug_delete']; // removed .php
 		if(is_dir($file_php)){
-	    $link = rrmdir($file_php);  // old unlink()
+		  query("DELETE FROM ".DB_PREFIX."plugins WHERE `plugin`='".$_REQUEST['plug_delete']."'");
+		if(file_exists($file_php.'/admin/function.php')){
+			include_once $file_php.'/admin/function.php';
+			if(function_exists('remove_tables')){
+				remove_tables();
+			}
+		}
+	         $link = rrmdir($file_php);  // old unlink()
 		$msg= "<span class='success'>Plugin deleted successfully !</span>";
 		}
 		return $msg;
