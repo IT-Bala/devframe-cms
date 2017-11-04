@@ -6,12 +6,12 @@ class site extends user_define {
 	public function menu(){$link='';		
 		$link = basename($_SERVER['REQUEST_URI']);
 		$que = select(DB_PREFIX.'menus where status=1 and submenu_id=0');		
-		while($fetch = fetch($que)){
+		while($fetch = $que->fetch_object()){
 			$act = '';			
 			if($fetch->menu_link==$link){ $act='class="current"';}else{ }			
 			echo '<li '.$act.'><a href='.$fetch->menu_link.'>'.$fetch->menu.'</a>';
 			$q = select(DB_PREFIX.'menus where submenu_id!=0 and status=1 and submenu_id='.$fetch->menu_id);
-			if(mysql_num_rows($q)>0){
+			if($q->num_rows>0){
 			echo '<ul class="subnav">';
 			while($sb = fetch($q)){
 			echo '<li><a href="'.$sb->menu_link.'">'.$sb->menu.'</a></li>';
@@ -24,11 +24,11 @@ class site extends user_define {
 		global $plug;
 		$que = select(DB_PREFIX."pages where default_page=1");
 		if($que == true){
-		$count = mysql_num_rows($que);
-		$default = mysql_fetch_object($que);
+		$count = $que->num_rows;
+		$default = $que->fetch_object();
 		if($count==1):
 		$que = where(DB_PREFIX."pages","page_id=".$default->page_id.""); 
-		$fetch = fetch($que);				
+		$fetch = $que->fetch_object();				
 		if($rep = plug_between("@@","@@",$fetch->page_content)):
 		$plug->code($rep,$rep,$fetch->page_content);
 		else:
@@ -37,7 +37,7 @@ class site extends user_define {
 		endif;
 		}else{		
 		$que = where(DB_PREFIX."pages","page_id=1"); 
-		$fetch = fetch($que);				
+		$fetch = $que->fetch_object();				
 		if($rep = plug_between("@@","@@",$fetch->page_content)):
 		$plug->code($rep,$rep,$fetch->page_content);
 		else:
@@ -50,8 +50,8 @@ class site extends user_define {
 		$baseurl = basename($_SERVER['REQUEST_URI']);
 		$sql = select(DB_PREFIX."posts where friendly_url='".$baseurl."'");
 		$sql_ = select(DB_PREFIX."pages where friendly_url='".$baseurl."'");
-		if((mysql_num_rows($sql)==1) or (mysql_num_rows($sql_)==1)){
-		if(mysql_num_rows($sql)==1){
+		if(($sql->num_rows==1) or ($sql_->num_rows==1)){
+		if($sql->num_rows==1){
 			$fetch = fetch($sql);
 			if($rep = plug_between("@@","@@",$fetch->post_content)):
 			$title = $fetch->post_title;
