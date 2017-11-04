@@ -4,8 +4,8 @@ if(isset($_REQUEST['fb'])){$admin->update_font_family($_REQUEST);}
 if(isset($_REQUEST['fs'])){$admin->update_font_size($_REQUEST);}
 echo $admin->font_family();
 echo $admin->font_size();
-$q= select(DB_PREFIX.'admin_design'); $fb=''; $fs='';
-if(mysql_num_rows($q)!=0){ $ft=fetch($q); $fb = $ft->font_family; $fs = $ft->font_size;}
+$q= db()->query("select * from ".DB_PREFIX.'admin_design'); $fb=''; $fs='';
+if($q->num_rows!=0){ $ft=$q->fetch_object(); $fb = $ft->font_family; $fs = $ft->font_size;}
  ?>
 <strong>Dev__ Frame Admin Panel</strong>
 <div style="float:right; display:inline;">
