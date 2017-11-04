@@ -179,12 +179,10 @@ body{
 	margin:auto;
 }
 table{
-	border:1px #eee solid;
 	padding:20px;
 	border-radius:5px;
 	margin:auto;
-	background:#eee;
-	box-shadow:1px 1px 5px #444;
+	background:#FFF;
 }
 td{
 	padding:8px;
@@ -241,7 +239,7 @@ function Validate(){
 <div id="wrapper">
 <div id="header">
 <h2 align="center">Install dev__ framework</h2>
-</div>
+</div><hr>
 <form method="post" onSubmit="return Validate();">
 <table width="548">
 <tr>
