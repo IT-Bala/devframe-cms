@@ -35,7 +35,8 @@ foreach(admin::plugin_list() as $plugin){ $i++;
 		$PLUG = explode('.',$p_name);
 		$tot += count($PLUG[0]);
 	
-	 		if(num(DB_PREFIX."plugins where plugin='".$p_name."' and status=1")==1){ 
+	 		$sql = db()->query("select * from ".DB_PREFIX."plugins where plugin='".$p_name."' and status=1");		
+	 		if($sql->num_rows==1){
 			 $option = '<a href="javascript:de_activate('."'$PLUG[0]'".')">De-activate</a>';
 			 $status = '<span style="color:darkgreen;">Active</span>';
 			 }else{			 	
