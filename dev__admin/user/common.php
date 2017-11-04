@@ -9,28 +9,28 @@ class common extends page_assign{
 		return array("10","11","12","13","14","15","16");
 	}
 	public function update_font_family($f){
-		$s = select(DB_PREFIX.'admin_design');
-		if(mysql_num_rows($s)==0){
-			query('insert into '.DB_PREFIX.'admin_design set font_family="'.mysql_real_escape_string($f['fb']).'",status=1');
+		$s = db()->query("select * from ".DB_PREFIX.'admin_design');
+		if($s->num_rows==0){
+			db()->query('insert into '.DB_PREFIX.'admin_design set font_family="'.db()->real_escape_string($f['fb']).'",status=1');
 		}else{
-		   $fb = mysql_real_escape_string($f['fb']);
-		   query("update ".DB_PREFIX."admin_design set font_family='".$fb."'");
+		   $fb = db()->real_escape_string($f['fb']);
+		   db()->query("update ".DB_PREFIX."admin_design set font_family='".$fb."'");
 		}
 	}
 	public function update_font_size($f){
-		$s = select(DB_PREFIX.'admin_design');
-		if(mysql_num_rows($s)==0){
-			query('insert into '.DB_PREFIX.'admin_design set font_size="'.mysql_real_escape_string($f['fs']).'",status=1');
+		$s = db()->query("select * from ".DB_PREFIX.'admin_design');
+		if($s->num_rows==0){
+			db()->query('insert into '.DB_PREFIX.'admin_design set font_size="'.db()->real_escape_string($f['fs']).'",status=1');
 		}else{
-		   $fb = mysql_real_escape_string($f['fs']);
-		   query("update ".DB_PREFIX."admin_design set font_size='".$fb."'");
+		   $fb = db()->real_escape_string($f['fs']);
+		   db()->query("update ".DB_PREFIX."admin_design set font_size='".$fb."'");
 		}
 	}
 	public function font_family(){
 		$family = '';
-		$s = select(DB_PREFIX.'admin_design');
+		$s = db()->query("select * from ".DB_PREFIX.'admin_design');
 		if(num(DB_PREFIX."admin_design")>0){
-		$ft = fetch($s);
+		$ft = $s->fetch_object();
 		if($ft->font_family==''){ $family = '<style>body{font-family:serif;}</style>'; }else{
 		$family = '<style>body{font-family:'.$ft->font_family.';}</style>';
 		}
@@ -39,9 +39,9 @@ class common extends page_assign{
 	}
 	public function font_size(){
 		$size = '';
-		$s = select(DB_PREFIX.'admin_design');
+		$s = db()->query("select * from ".DB_PREFIX.'admin_design');
 		if(num(DB_PREFIX."admin_design")>0){
-		$ft = fetch($s);
+		$ft = $s->fetch_object();
 		if($ft->font_size=='' || $ft->font_size==0){$size='<style>body{font-size:13px;}</style>';}else{
 		$size = '<style>body{font-size:'.$ft->font_size.'px;}</style>';
 		}}
@@ -51,13 +51,13 @@ class common extends page_assign{
 	
 	public function make_default()
 	{
-		return select(DB_PREFIX."pages where status=1");
+		return db()->query("select * from ".DB_PREFIX."pages where status=1");
 	}
 	public function make_default_run()
 	{
 		if($_REQUEST['default'] != ''){
-		mysql_query("update ".DB_PREFIX."pages set default_page=0");
-		$query = mysql_query("update ".DB_PREFIX."pages set default_page=1 where page_id=".$_REQUEST['default']."");
+		db()->query("update ".DB_PREFIX."pages set default_page=0");
+		$query = db()->query("update ".DB_PREFIX."pages set default_page=1 where page_id=".$_REQUEST['default']."");
 		if($query):
 		$msg = "<span class='success'>Default page has been activated success !</span>";
 		endif;
@@ -90,12 +90,12 @@ class common extends page_assign{
 	
 	// Page counts
 	public function page_count(){
-		$q = select(DB_PREFIX."pages");
-		return mysql_num_rows($q);
+		$q = db()->query("select * from ".DB_PREFIX."pages");
+		return $q->num_rows;
 	}
 	public function post_count(){
-		$q = select(DB_PREFIX."pages");
-		return mysql_num_rows($q);
+		$q = db()->query("select * from ".DB_PREFIX."pages");
+		return $q->num_rows;
 	}
 	public function plugin_count(){
 		foreach(glob("installed-plugin/*.zip") as $plug):
@@ -104,8 +104,8 @@ class common extends page_assign{
 		return count($pl);
 	}
 	public function menu_count(){
-		$q = select(DB_PREFIX."menus");
-		return mysql_num_rows($q);
+		$q = db()->query("select * from ".DB_PREFIX."menus");
+		return $q->num_rows;
 	} 
 	
 	public function admin_counts(){
@@ -124,7 +124,7 @@ class common extends page_assign{
 		if($_REQUEST['friendly_url']!=''){	$url= check_friendly_url($_REQUEST['friendly_url']); }else{
 			$url= check_friendly_url($_REQUEST['addpage']);
 		}
-		$msg = query("insert into ".DB_PREFIX."pages set page_title='".$_REQUEST['addpage']."', friendly_url='".$url."', page_content='".$_REQUEST['editor1']."',tpl='".$_REQUEST['tpl']."',page_date=now()");
+		$msg = db()->query("insert into ".DB_PREFIX."pages set page_title='".$_REQUEST['addpage']."', friendly_url='".$url."', page_content='".$_REQUEST['editor1']."',tpl='".$_REQUEST['tpl']."',page_date=now()");
 		if($msg): return '<span class="success">New page created successfully !</span>'; else: return '<span class="error">Insert query error occured !</span>'; endif;
 		}else{	echo "<span class='error'>Please enter page title !</span>";}
 	}
@@ -133,7 +133,7 @@ class common extends page_assign{
 		if($_REQUEST['friendly_url']!=''){	$url= check_friendly_url($_REQUEST['friendly_url']); }else{
 			$url= check_friendly_url($_REQUEST['addpage']);
 		}
-		$msg = query("insert into ".DB_PREFIX."posts set post_title='".$_REQUEST['addpage']."', friendly_url='".$url."', post_content='".$_REQUEST['editor1']."',tpl='".$_REQUEST['tpl']."',post_date=now()");
+		$msg = db()->query("insert into ".DB_PREFIX."posts set post_title='".$_REQUEST['addpage']."', friendly_url='".$url."', post_content='".$_REQUEST['editor1']."',tpl='".$_REQUEST['tpl']."',post_date=now()");
 		if($msg): return '<span class="success">New Post created successfully !</span>'; else: return '<span class="error">Insert query error occured !</span>'; endif;
 		}else{ echo "<span class='error'>Please enter page title !</span>";}
 	}
@@ -146,7 +146,7 @@ class common extends page_assign{
 		return $que;
 	}
 	public function all_page(){
-		$msg = select(DB_PREFIX.'pages');
+		$msg = db()->query("select * from ".DB_PREFIX.'pages');
 		return $msg;
 	}
 	public function update_page($get,$id){
@@ -166,12 +166,12 @@ class common extends page_assign{
 	}
 	public function add_menu()
 	{
-		$msg = query("insert into ".DB_PREFIX."menus(menu,menu_link,menu_date,status) values ('".$_REQUEST['menu']."','".$_REQUEST['menu_link']."',now(),1)");
+		$msg = db()->query("insert into ".DB_PREFIX."menus(menu,menu_link,menu_date,status) values ('".$_REQUEST['menu']."','".$_REQUEST['menu_link']."',now(),1)");
 		echo "<span class='success'>New menu item added successfully!</span>";
 		return $msg;
 	}
 	public function all_menu(){
-		$msg = select(DB_PREFIX.'menus');
+		$msg = db()->query("select * from ".DB_PREFIX.'menus');
 		return $msg;
 	}
 	public function edit_menu($id){
@@ -179,17 +179,17 @@ class common extends page_assign{
 		return $que;
 	}
 	public function update_menu($gda,$id){
-		$que = query("update ".DB_PREFIX."menus set menu='".$_REQUEST['menu']."', menu_link='".$_REQUEST['menu_link']."' where menu_id=$id");
+		$que = db()->query("update ".DB_PREFIX."menus set menu='".$_REQUEST['menu']."', menu_link='".$_REQUEST['menu_link']."' where menu_id=$id");
 		echo "<span class='success'>Menu updated successfully !</span>";
 		return $que;
 	}
 	public function menu_activate($id){
-		$q= query("update ".DB_PREFIX."menus set status=1 where menu_id=$id");
+		$q = db()->query("update ".DB_PREFIX."menus set status=1 where menu_id=$id");
 		if($q==true){ echo "<span class='success'>Menu activated successfully !</span>";}
 	}
 	
 	public function menu_deactivate($id){
-		$q= query("update ".DB_PREFIX."menus set status=0 where menu_id=$id");
+		$q = db()->query("update ".DB_PREFIX."menus set status=0 where menu_id=$id");
 		if($q==true){ echo "<span class='success'>Menu de-activated successfully !</span>";	}
 	}
 	// Themes handling
@@ -234,21 +234,21 @@ class common extends page_assign{
 	public function active_theme(){
 		$cur='';
 		$cT = func_get_args(); if(!empty($cT[0])){ $cur = 'theme="'.$cT[0].'" and ';}
-		$q = select(DB_PREFIX."themes where ".$cur." status=1");
-		$ft = fetch($q);
+		$q = db()->query("select * from ".DB_PREFIX."themes where ".$cur." status=1");
+		$ft = $q->fetch_object();
 		return $ft->status;
 	}
 	public function theme_active($theme){
-		query("update ".DB_PREFIX."themes set status=0");
-		$slt = select(DB_PREFIX."themes where theme='".$_REQUEST['plug_a']."'");
-		$count = mysql_num_rows($slt);
-		if($count==0){ query("insert into ".DB_PREFIX."themes (theme,status) values ('".$_REQUEST['plug_a']."',1)");}else{
-			query("update ".DB_PREFIX."themes set status=1 where theme='".$_REQUEST['plug_a']."'");
+		db()->query("update ".DB_PREFIX."themes set status=0");
+		$slt = db()->query("select * from ".DB_PREFIX."themes where theme='".$_REQUEST['plug_a']."'");
+		$count = $slt->num_rows;
+		if($count==0){ db()->query("insert into ".DB_PREFIX."themes (theme,status) values ('".$_REQUEST['plug_a']."',1)");}else{
+			db()->query("update ".DB_PREFIX."themes set status=1 where theme='".$_REQUEST['plug_a']."'");
 		}
 		return "<span class='success'>Theme ".$_REQUEST['plug_a']." activated successfully !</span>";	
 	}
 	public function theme_deactive($theme){
-		query("update ".DB_PREFIX."themes set status=0 where theme='".$_REQUEST['plug_d']."'");
+		db()->query("update ".DB_PREFIX."themes set status=0 where theme='".$_REQUEST['plug_d']."'");
 		return "<span class='success'>Theme ".$_REQUEST['plug_d']." de-activated successfully !</span>";
 	}
 	public function theme_delete(){$msg='';
@@ -290,29 +290,22 @@ class common extends page_assign{
 		return $file;
 	}
 	public function plugin_active($theme){
-		$slt = select(DB_PREFIX."plugins where plugin='".$_REQUEST['plug_a']."'");
-		$count = mysql_num_rows($slt);
-		if($count==0){ query("insert into ".DB_PREFIX."plugins (plugin,status) values ('".$_REQUEST['plug_a']."',1)");}else{
-			query("update ".DB_PREFIX."plugins set status=1 where plugin='".$_REQUEST['plug_a']."'");
+		$slt = db()->query("select * from ".DB_PREFIX."plugins where plugin='".$_REQUEST['plug_a']."'");
+		$count = $slt->num_rows;
+		if($count==0){ db()->query("insert into ".DB_PREFIX."plugins (plugin,status) values ('".$_REQUEST['plug_a']."',1)");}else{
+			db()->query("update ".DB_PREFIX."plugins set status=1 where plugin='".$_REQUEST['plug_a']."'");
 		}
 		return "<span class='success'>Plugin ".$_REQUEST['plug_a']." activated successfully !</span>";	
 	}
 	public function plugin_deactive($theme){
-		query("update ".DB_PREFIX."plugins set status=0 where plugin='".$_REQUEST['plug_d']."'");
+		db()->query("update ".DB_PREFIX."plugins set status=0 where plugin='".$_REQUEST['plug_d']."'");
 		return "<span class='success'>Plugin ".$_REQUEST['plug_d']." de-activated successfully !</span>";
 	}
 	
 	public function plug_delete($pls){ $msg='';
 		$file_php = "../partition/plugins/".$_REQUEST['plug_delete']; // removed .php
 		if(is_dir($file_php)){
-		  query("DELETE FROM ".DB_PREFIX."plugins WHERE `plugin`='".$_REQUEST['plug_delete']."'");
-		if(file_exists($file_php.'/admin/function.php')){
-			include_once $file_php.'/admin/function.php';
-			if(function_exists('remove_tables')){
-				remove_tables();
-			}
-		}
-	         $link = rrmdir($file_php);  // old unlink()
+	    $link = rrmdir($file_php);  // old unlink()
 		$msg= "<span class='success'>Plugin deleted successfully !</span>";
 		}
 		return $msg;
@@ -385,15 +378,15 @@ echo $form;
 	}
 	
 	public function login(){
-		$que = query("select * from ".DB_PREFIX."admin where admin_id=1");
-		$msg = fetch($que);
+		$que = db()->query("select * from ".DB_PREFIX."admin where admin_id=1");
+		$msg = $que->fetch_object();
 		return $msg;
 	}
 	
 	public function update_login($get){
 		if($_REQUEST['uname']!='' && $_REQUEST['psword']!='')
 		{
-		$que = query("update ".DB_PREFIX."admin set username='".$_REQUEST['uname']."',password='".$_REQUEST['psword']."'");
+		$que = db()->query("update ".DB_PREFIX."admin set username='".$_REQUEST['uname']."',password='".$_REQUEST['psword']."'");
 		if($que){ $msg = "<span class='success'>Username and password has been updated successfully !</span>"; }
 		}
 		else{
@@ -407,9 +400,9 @@ echo $form;
 		$msg="";
 		if(!isset($_SESSION['Login'])):
 		if($_REQUEST['login']!='' && $_REQUEST['password']!=''){
-		$que = mysql_query("select * from ".DB_PREFIX."admin where username='".$_REQUEST['login']."' and password='".$_REQUEST['password']."'");
-		$fetch = mysql_fetch_object($que);
-		$count = mysql_num_rows($que);
+		$que = db()->query("select * from ".DB_PREFIX."admin where username='".$_REQUEST['login']."' and password='".$_REQUEST['password']."'");
+		$fetch = $que->fetch_object();
+		$count = $que->num_rows;
 		if($count > 0){ 
 		$_SESSION['Login']=$fetch->username;  
 		$_SESSION['expire']=time()+1800; 
