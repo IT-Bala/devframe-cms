@@ -24,9 +24,9 @@ if(isset($_REQUEST['Set'])):admin::set_submenu($_REQUEST['plug_d']); endif;
 </tr>
 <?php 
 $query = admin::all_menu();
-$count = mysql_num_rows($query);
+$count = $query->num_rows;
 if($count > 0):
-while($menu = fetch($query)) {
+while($menu = $query->fetch_object()) {
 ?>
 <tr>
 <td><?php echo $menu->menu_id; ?></td>
