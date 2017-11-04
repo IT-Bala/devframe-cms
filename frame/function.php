@@ -124,7 +124,7 @@ function fetch_once(){
 	$tbl = ''; $field = '';
 	if(count($arg=func_get_args())==2){$tbl = $arg[0]; $field=$arg[1];
 	$sql = where($tbl,$field);
-	$msg = fetch($sql);
+	$msg = $sql->fetch_object();
 	}else{ $msg = error('fetch_once( ) function must be two values!');}
 	return $msg;
 }
@@ -602,8 +602,10 @@ function connect_plugin(){$Plug=$short='';
 		foreach(glob($Plug_path.'*') as $file){
 		$current = $file.'/short_code.txt';
 		if(file_exists($current)){ #echo $current;
-			$data = file_get_contents($current);			
-			if(num(DB_PREFIX."plugins WHERE plugin='".$short."'")==1){
+			$data = file_get_contents($current);	
+			$sql = db()->query("select * from ".DB_PREFIX."plugins WHERE plugin='".$short."'");
+		
+	 		if($sql->num_rows==1){		
 				$fetch = fetch_once(DB_PREFIX."plugins","plugin='".$short."'");
 				if($fetch->status==1){
 				 	if(strpos($data,$short)===false){ # Sorry short code is not found!
@@ -1087,14 +1089,16 @@ function css(){
 }
 function url($id,$type){$link='#';
 	if($type=='post'){
-		if(num(DB_PREFIX."posts where post_id=".decode($id))==1){
-		$p=fetch_once(DB_PREFIX."posts","post_id=".decode($id));
+		$sql = db()->query("select * from ".DB_PREFIX."posts where post_id=".decode($id));		
+	 	if($sql->num_rows==1){
+		$p=$sql->fetch_object();
 		$link = $p->friendly_url;
 		if($link==''){ $link='page.php?p_id='.decode($id); }
 		}
 	}else{
-		if(num(DB_PREFIX."pages where page_id=".decode($id))==1){
-		$p=fetch_once(DB_PREFIX."pages","page_id=".decode($id));
+		$sql = db()->query("select * from ".DB_PREFIX."pages where page_id=".decode($id));		
+	 	if($sql->num_rows==1){
+		$p=$sql->fetch_object();
 		$link = $p->friendly_url;
 		if($link==''){ $link='page.php?page_id='.decode($id); }
 		}
