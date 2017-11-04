@@ -41,7 +41,8 @@ class plug_load{
 					
 					foreach($short as $code){ 
 						$plug_code = str_replace("@@","",$code);
-						if(num(DB_PREFIX."plugins WHERE plugin='".$plug_code."'")==1){ 
+						$sql = db()->query("select * from ".DB_PREFIX."plugins WHERE plugin='".$plug_code."'");		
+				 		if($sql->num_rows==1){
 							$fetch = fetch_once(DB_PREFIX."plugins","plugin='".$plug_code."'");
 							if($fetch->status==1){
 								if(strpos($data,$plug_code)===false){ # Sorry short code is not found!
