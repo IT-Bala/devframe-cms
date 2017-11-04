@@ -1,9 +1,9 @@
 <?php
 // PHP dev__ FRAMEWORK
 // DEFINE SECTION
-echo 12312;
 define('PLUG_BASE','plugins/');
 define('THEME_PATH','partition/themes/');
+include("config/config.php");
 include('frame/function.php');
 include("load/dev__.php");
 include("plug_load/plug_load.php");
