@@ -6,34 +6,27 @@ if(isset($_REQUEST['install'])){
 	$user = $_REQUEST['user'];
 	$pass = $_REQUEST['password'];
 	
-$file = fopen('config/config.php', 'w');
-fwrite($file,"<?php
-// PHP dev__ FRAMEWORK
-define('HOSTNAME','".$_REQUEST['host']."');	
-define('USERNAME','".$_REQUEST['user']."');	
-define('PASSWORD','".$_REQUEST['password']."');
-define('DATABASE','".$_REQUEST['db']."');	
-define('DB_PREFIX','".$_REQUEST['db_prefix']."');							   
-class DB{
-      function __construct(){
-		  ".'$sql'." = mysql_connect(HOSTNAME,USERNAME,PASSWORD);
-		  mysql_select_db(DATABASE,".'$sql'.");
-	  }
-}
-new DB;");
-	$con=mysql_connect($host,$user,$pass); 
-	$db_list = mysql_list_dbs($con); # db list from server
-	while ($row = mysql_fetch_object($db_list)) {
-     $db[] = $row->Database;
+	$dbs= array();
+	$db=new MySqli($host,$user,$pass);
+	if ($db->connect_errno) {
+		printf("Connect failed: %s\n", $db->connect_error());
+		exit();
 	}
-	if(in_array($_REQUEST['db'],$db)){ $sql = 'DROP DATABASE '.$_REQUEST['db'].''; mysql_query($sql,$con);} # delete exist database from server
+	$db_list = $db->query("show databases"); # db list from server
+	while ($row = $db_list->fetch_object()) {
+     $dbs[] = $row->Database;
+	}
+	if(in_array($_REQUEST['db'],$dbs)){ 
+	die("Sorry, ".$_REQUEST['db']." database already exist.");
+	#$sql = 'DROP DATABASE '.$_REQUEST['db'].''; $db->query($sql);
+	} # delete exist database from server
 	    
-	  $sql=mysql_query("CREATE DATABASE ".$_REQUEST['db']."",$con);
+	  $sql=$db->query("CREATE DATABASE `".$_REQUEST['db']."`");
       
 	  if ($sql==true){	  
-	  mysql_select_db($_REQUEST['db'],$con);
+	  $db=new MySqli($host,$user,$pass,$_REQUEST['db']); 
 	    // Create tables as automatic
-		$Host = mysql_query("CREATE TABLE ".$_REQUEST['db'].".`".$_REQUEST['db_prefix']."admin` (
+		$Host = $db->query("CREATE TABLE ".$_REQUEST['db'].".`".$_REQUEST['db_prefix']."admin` (
 		`admin_id` INT NOT NULL AUTO_INCREMENT ,
 		`username` VARCHAR( 255 ) NOT NULL ,
 		`password` VARCHAR( 255 ) NOT NULL ,
@@ -42,7 +35,7 @@ new DB;");
 		) ENGINE = InnoDB");
 		
 		// create menu table
-		mysql_query("CREATE TABLE ".$_REQUEST['db'].".`".$_REQUEST['db_prefix']."menus` (
+		$db->query("CREATE TABLE ".$_REQUEST['db'].".`".$_REQUEST['db_prefix']."menus` (
 		`menu_id` INT NOT NULL AUTO_INCREMENT ,
 		`submenu_id` INT NOT NULL ,
 		`menu` VARCHAR( 255 ) NOT NULL ,
@@ -53,7 +46,7 @@ new DB;");
 		) ENGINE = InnoDB");
 		
 		// create page table
-		mysql_query("CREATE TABLE ".$_REQUEST['db'].".`".$_REQUEST['db_prefix']."pages` (
+		$db->query("CREATE TABLE ".$_REQUEST['db'].".`".$_REQUEST['db_prefix']."pages` (
 		`page_id` INT NOT NULL AUTO_INCREMENT ,
 		`page_title` VARCHAR( 255 ) NOT NULL ,
 		`page_content` TEXT NOT NULL ,
@@ -67,7 +60,7 @@ new DB;");
 		) ENGINE = InnoDB");
 		
 		// create page table
-		mysql_query("CREATE TABLE ".$_REQUEST['db'].".`".$_REQUEST['db_prefix']."posts` (
+		$db->query("CREATE TABLE ".$_REQUEST['db'].".`".$_REQUEST['db_prefix']."posts` (
 		`post_id` INT NOT NULL AUTO_INCREMENT ,
 		`post_title` VARCHAR( 255 ) NOT NULL ,
 		`post_content` TEXT NOT NULL ,
@@ -81,7 +74,7 @@ new DB;");
 		) ENGINE = InnoDB");
 		
 		// create theme table
-		mysql_query("CREATE TABLE ".$_REQUEST['db'].".`".$_REQUEST['db_prefix']."themes` (
+		$db->query("CREATE TABLE ".$_REQUEST['db'].".`".$_REQUEST['db_prefix']."themes` (
 		`theme_id` INT NOT NULL AUTO_INCREMENT ,
 		`theme` VARCHAR( 255 ) NOT NULL ,
 		`status` INT NOT NULL ,
@@ -89,7 +82,7 @@ new DB;");
 		) ENGINE = InnoDB");
 		
 		// create plugin table
-		mysql_query("CREATE TABLE ".$_REQUEST['db'].".`".$_REQUEST['db_prefix']."plugins` (
+		$db->query("CREATE TABLE ".$_REQUEST['db'].".`".$_REQUEST['db_prefix']."plugins` (
 		`plugin_id` INT NOT NULL AUTO_INCREMENT ,
 		`plugin` VARCHAR( 255 ) NOT NULL ,
 		`status` INT NOT NULL ,
@@ -97,7 +90,7 @@ new DB;");
 		) ENGINE = InnoDB");
 		
 		// design part
-		mysql_query("CREATE TABLE ".$_REQUEST['db'].".`".$_REQUEST['db_prefix']."admin_design` (
+		$db->query("CREATE TABLE ".$_REQUEST['db'].".`".$_REQUEST['db_prefix']."admin_design` (
 		`design_id` INT NOT NULL AUTO_INCREMENT ,
 		`font_size` INT NOT NULL , 
 		`font_family` VARCHAR( 255 ) NOT NULL ,
@@ -106,7 +99,7 @@ new DB;");
 		) ENGINE = InnoDB");
 		
 		// admin menu
-		mysql_query("CREATE TABLE ".$_REQUEST['db'].".`".$_REQUEST['db_prefix']."admin_menu` (
+		$db->query("CREATE TABLE ".$_REQUEST['db'].".`".$_REQUEST['db_prefix']."admin_menu` (
 		`menu_id` INT NOT NULL AUTO_INCREMENT ,
 		`menu` VARCHAR( 255 ) NOT NULL ,
 		`link` VARCHAR( 255 ) NOT NULL ,
@@ -115,7 +108,7 @@ new DB;");
 		) ENGINE = InnoDB");
 		
 		// admin menu option link
-		mysql_query("CREATE TABLE ".$_REQUEST['db'].".`".$_REQUEST['db_prefix']."admin_submenu` (
+		$db->query("CREATE TABLE ".$_REQUEST['db'].".`".$_REQUEST['db_prefix']."admin_submenu` (
 		`submenu_id` INT NOT NULL AUTO_INCREMENT ,
 		`menu_id` INT NOT NULL ,
 		`submenu` VARCHAR( 255 ) NOT NULL ,
@@ -125,16 +118,16 @@ new DB;");
 		) ENGINE = InnoDB");
 		
 		if($Host==true){
-			$Insert = mysql_query("insert into ".$_REQUEST['db_prefix']."admin(username,password,status) values ('".$_REQUEST['a_username']."','".$_REQUEST['a_password']."','1')");
+			$Insert = $db->query("insert into ".$_REQUEST['db_prefix']."admin(username,password,status) values ('".$_REQUEST['a_username']."','".$_REQUEST['a_password']."','1')");
 			
-			$Insert .= mysql_query("INSERT INTO `".$_REQUEST['db_prefix']."admin_menu` (`m_id`, `menu`, `link`, `status`) VALUES
+			$Insert .= $db->query("INSERT INTO `".$_REQUEST['db_prefix']."admin_menu` (`m_id`, `menu`, `link`, `status`) VALUES
 (1, 'Dashboard', '', 1),
 (2, 'Pages', '', 1),
 (3, 'Menus', '', 1),
 (4, 'Plugins', '', 1),
 (5, 'Partition', '', 1),
 (6, 'Settings', '', 1)");
-			$Insert .= mysql_query("INSERT INTO `".$_REQUEST['db_prefix']."admin_option` (`o_id`, `m_id`, `option`, `link`, `status`) VALUES
+			$Insert .= $db->query("INSERT INTO `".$_REQUEST['db_prefix']."admin_option` (`o_id`, `m_id`, `option`, `link`, `status`) VALUES
 (1, '1', 'Home', 'index.php', 1),
 (2, '1', 'Visite Site', '../', 1),
 (3, '2', 'All Pages', 'all_page.php?Pages', 1),
@@ -152,12 +145,22 @@ new DB;");
 (15, '6', 'Log Out', 'site_profile.php?Settings&logout=true', 1)");
 			
 		if($Insert==true){
-		header("location: un-install/un-install.php"); // success
-		}else{ header("location: un-install/install-error.php"); // Error
-			}
-		}		
-	  }
-	  else{  echo "Failed to connect to MySQL: " . mysql_error();  }
+		 $file = fopen('config/config.php', 'w');
+			fwrite($file,"<?php
+			// PHP dev__ FRAMEWORK
+			define('HOSTNAME','".$_REQUEST['host']."');	
+			define('USERNAME','".$_REQUEST['user']."');	
+			define('PASSWORD','".$_REQUEST['password']."');
+			define('DATABASE','".$_REQUEST['db']."');	
+			define('DB_PREFIX','".$_REQUEST['db_prefix']."');
+			".'$db'." = new MySqli(HOSTNAME,USERNAME,PASSWORD,DATABASE);						   
+			");
+		 header("location: un-install/un-install.php"); // success
+		}else{ 
+		header("location: un-install/install-error.php"); // Error
+		}
+	}		
+}else{  echo "Failed to connect to MySQL: " . $db->error();  }
 
 }
 ?>
