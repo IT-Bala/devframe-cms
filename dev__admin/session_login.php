@@ -2,9 +2,9 @@
 session_start();
 include('../config/config.php');
 if($_REQUEST['login']!='' && $_REQUEST['password']!=''){
-		$que = mysql_query("select * from ".DB_PREFIX."admin where username='".$_REQUEST['login']."' and password='".$_REQUEST['password']."'");
-		$fetch = mysql_fetch_object($que);
-		$count = mysql_num_rows($que);
+		$que = db()->query("select * from ".DB_PREFIX."admin where username='".$_REQUEST['login']."' and password='".$_REQUEST['password']."'");
+		$fetch = $que->fetch_object();
+		$count = $que->num_rows;
 		if($count > 0){ $_SESSION['Login']=$fetch->username;  $_SESSION['expire']=time()+1800; 
 		echo '<style>#session_popup{display:none;}#page{ pointer-events: auto;}</style>';
 }
