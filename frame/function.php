@@ -1,7 +1,10 @@
 <?php
 #                                                #
-# PHP Dev__ framework [ Predefioned functions ]  #
-#                                                #
+# PHP Dev__ framework [ Predefined functions ]  #
+#
+function db(){ global $db;
+	return $db;
+}
 function inc($file){
 	if(!empty($file)){
 	if(file_exists($file.'.php')){
@@ -24,9 +27,9 @@ function limit($str,$limit){
 function check_friendly_url($string){ $checked_url='';
     $string = str_replace(' ', '-', $string); // Replaces all spaces with hyphens.
     $new = preg_replace('/[^A-Za-z0-9\-\.\_]/', '', $string); // Removes special chars.
-	$sql = select(DB_PREFIX."posts where friendly_url='".$new."'");
-	$sql_ = select(DB_PREFIX."pages where friendly_url='".$new."'");
-	if((mysql_num_rows($sql)==0) && (mysql_num_rows($sql_)==0)){
+	$sql = db()->query("select * from ".DB_PREFIX."posts where friendly_url='".$new."'");
+	$sql_ = db()->query("select * from ".DB_PREFIX."pages where friendly_url='".$new."'");
+	if(($sql->num_rows==0) && ($sql_->num_rows==0)){
 	$checked_url = $new;
 	}else{ $checked_url = 'page-'.rand(2,100).'-'.$new; }
 	return $checked_url;
@@ -63,7 +66,7 @@ function loop($value,$count){
 	}
 }
 function query($que){
-	$que = mysql_query($que);
+	$que = db()->query($que);
 	return $que;
 }
 function insert($tbl,$submit){$msg='';
@@ -73,8 +76,8 @@ function insert($tbl,$submit){$msg='';
 		foreach($_POST as $name=>$value){
 			if($name!=$submit){
 			  if ($count++ != 0) $fields .= ', ';
-			  $name = mysql_real_escape_string($name);
-			  $value = mysql_real_escape_string($value);
+			  $name = db()->real_escape_string($name);
+			  $value = db()->real_escape_string($value);
 			  $fields .= "`$name` = '$value'";
 			}
 		}query("insert into $tbl set $fields");
@@ -82,11 +85,11 @@ function insert($tbl,$submit){$msg='';
 	echo $msg;		
 }
 function select($que){
-	$que = mysql_query("select * from $que");
+	$que = db()->query("select * from `".$que."`");
 	return $que;
 }
 function where($tbl,$field){
-	$que = mysql_query("select * from $tbl where $field");
+	$que = db()->query("select * from $tbl where $field");
 	if($que==true){
 	return $que;
 	}else{
@@ -128,8 +131,8 @@ function fetch_once(){
 function fetch_all(){
 	$tbl = '';
 	if(count($arg=func_get_args())==1){$tbl = $arg[0];
-		$sql = select($tbl);
-		while($_ = fetch($sql)){
+		$sql = db()->query("select * from ".$tbl);
+		while($_ = $sql->fetch_object()){
 			$_[] = $_;
 		}
 	}else{
@@ -138,7 +141,7 @@ function fetch_all(){
 	return $_;
 }
 function fetch($que){ $fet='';
-	$fet = mysql_fetch_object($que);
+	$fet = $que->fetch_object();
 	return $fet;
 }
 function view($fun){
@@ -490,9 +493,9 @@ function get_footer(){ global $plug; $get_header=''; $theme_base = 'partition/th
 
 function getpage(){ global $plug; $tpl_base = 'partition/themes/';
     $page_url = basename($_SERVER['REQUEST_URI']);
-	$sql = select(DB_PREFIX."pages where friendly_url='".$page_url."'");
-	if(mysql_num_rows($sql)==1){
-	$get = fetch($sql);
+	$sql = db()->query("select * from ".DB_PREFIX."pages where friendly_url='".$page_url."'");
+	if($sql->num_rows==1){
+	$get = $sql->fetch_object();
 	if($get->tpl==''){
 	  $tpl = false;
 	}else{ 
@@ -509,8 +512,8 @@ function getpage(){ global $plug; $tpl_base = 'partition/themes/';
 }
 function getpost(){ global $plug; $partition_base = 'partition/themes/';
     $page_url = basename($_SERVER['REQUEST_URI']);
-	$sql = select(DB_PREFIX."posts where friendly_url='".$page_url."'");
-	if(mysql_num_rows($sql)==1){
+	$sql = db()->query("select * from ".DB_PREFIX."posts where friendly_url='".$page_url."'");
+	if($sql->num_rows==1){
 	$get = fetch($sql);
 	if($get->tpl==''){
 	  $tpl = false;
@@ -538,15 +541,15 @@ function gettpl(){
 function check_page($page_id){
 	$ur = $_SERVER['REQUEST_URI'];
     $pageurl = basename($ur);
-	$que = mysql_query("select * from ".DB_PREFIX."pages where page_link='".$pageurl."'");
-	$page = mysql_num_rows($que);
+	$que = db()->query("select * from ".DB_PREFIX."pages where page_link='".$pageurl."'");
+	$page = $que->num_rows;
 	if($page==1){ return true;	}
 }
 function home(){ $return = false;
 	    $website_home = basename($_SERVER['REQUEST_URI']);
 	    $home = basename(getcwd());
 		$home_ = 'index.php';
-		if($website_home==$home || $website_home==$home_ || $_SERVER['REQUEST_URI'] == '/'){ 
+		if($website_home==$home or $website_home==$home_){
 				$return = true;	
 		}
 		return $return;
@@ -554,11 +557,11 @@ function home(){ $return = false;
 function theme_page(){ $page='false';
     if(home()==false){
 		$page_url = basename($_SERVER['REQUEST_URI']);
-		$sql = select(DB_PREFIX."posts where friendly_url='".$page_url."'");
-		$sql_ = select(DB_PREFIX."pages where friendly_url='".$page_url."'");
-		if((mysql_num_rows($sql)==1)){ 
+		$sql = db()->query("select * from ".DB_PREFIX."posts where friendly_url='".$page_url."'");
+		$sql_ = db()->query("select * from ".DB_PREFIX."pages where friendly_url='".$page_url."'");
+		if(($sql->num_rows==1)){ 
 		   $page = getpost();
-		}elseif(mysql_num_rows($sql_)==1){
+		}elseif($sql_->num_rows==1){
 		   $page = getpage();
 		}else{
 			ob_start();
@@ -571,10 +574,10 @@ function theme_page(){ $page='false';
 }
 function current_theme(){
 	$current = '';
-	$q = select(DB_PREFIX."themes where status=1");
-	$count = num(DB_PREFIX."themes where status=1");
+	$q = db()->query("select * from ".DB_PREFIX."themes where status=1");
+	$count = $q->num_rows;
 	if($count==1){
-	$ft = fetch($q);	
+	$ft = $q->fetch_object();	
 	$current = THEME_PATH.$ft->theme.'/index.php';
 	$data = file_get_contents($current);
 	$regex = '/connect_theme()/'; // Find out the function in index page
@@ -652,9 +655,9 @@ function THEME_PATH_PREFIX(){ return 'partition/themes/'; }
 
 function THEME_BASE(){
 	$THEME = '';
-	$q = select(DB_PREFIX."themes where status=1");
-	if(mysql_num_rows($q)>0){
-    $ft = fetch($q);
+	$q = db()->query("select * from ".DB_PREFIX."themes where status=1");
+	if($q->num_rows > 0){
+    $ft = $q->fetch_object();
     $THEME = $ft->theme;	
 	}return $THEME;
 }
@@ -691,9 +694,9 @@ define('SALT','plugins/');
 function decrypt($text){
         return trim(mcrypt_decrypt(MCRYPT_RIJNDAEL_256, SALT, base64_decode($text), MCRYPT_MODE_ECB, mcrypt_create_iv(mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB), MCRYPT_RAND)));
     }
-function num($tbl){
-	if($gg = mysql_query("select * from $tbl")){
-	return mysql_num_rows($gg);
+function num($tbl){ 
+	if($sql = db()->query("select * from `".$tbl."`")){
+	return $sql->num_rows;
 	}
 }
 function date_count($from,$to){
@@ -710,8 +713,8 @@ function backup_db($host,$user,$pass,$name,$tables = '*'){ // host, user, pass,d
 	//get all of the tables
 	if($tables == '*'){
 		$tables = array();
-		$result = mysql_query('SHOW TABLES');
-		while($row = mysql_fetch_row($result))
+		$result = db()->query('SHOW TABLES');
+		while($row = $result->num_rows)
 		{
 			$tables[] = $row[0];
 		}
@@ -724,16 +727,16 @@ function backup_db($host,$user,$pass,$name,$tables = '*'){ // host, user, pass,d
 	//cycle through
 	foreach($tables as $table)
 	{
-		$result = mysql_query('SELECT * FROM '.$table);
-		$num_fields = mysql_num_fields($result);
+		$result = db()->query('SELECT * FROM '.$table);
+		$num_fields = $result->field_count;
 		
 		$return.= 'DROP TABLE '.$table.';';
-		$row2 = mysql_fetch_row(mysql_query('SHOW CREATE TABLE '.$table));
+		$row2 = db()->query('SHOW CREATE TABLE '.$table)->fetch_row();
 		$return.= "\n\n".$row2[1].";\n\n";
 		
 		for ($i = 0; $i < $num_fields; $i++) 
 		{
-			while($row = mysql_fetch_row($result))
+			while($row = $result->fetch_row())
 			{
 				$return.= 'INSERT INTO '.$table.' VALUES(';
 				for($j=0; $j<$num_fields; $j++) 
@@ -798,13 +801,13 @@ div.pagination span.current {
 		</style>
 		";
 		// edit deva		
-		$que = mysql_query("select * from ".$tbl);
-		$My = mysql_num_rows($que);
+		$que = db()->query("select * from ".$tbl);
+		$My = $que->num_rows;
 		if($My > $lim){
 		$tbl_name=$tbl;	
 		$adjacents = 3;
 		$query = "SELECT COUNT(*) as num FROM $tbl_name";
-		$total_pages = mysql_fetch_array(mysql_query($query));
+		$total_pages = db()->query($query)->fetch_array();
 		$total_pages = $total_pages['num'];
 		
 		/* Setup vars for query. */
@@ -822,7 +825,7 @@ div.pagination span.current {
 		
 		/* Get data. */
 		$sql = "SELECT * FROM $tbl_name LIMIT $start, $limit";
-		$result = mysql_query($sql);
+		$result = db()->query($sql);
 		
 		/* Setup page vars for display. */
 		if ($page == 0) $page = 1;					//if no page var is given, default to 1.
@@ -958,14 +961,14 @@ div.pagination span.current {
 		</style>
 		";
 		// edit deva		
-		$que = mysql_query("select * from $tbl");
-		$My = mysql_num_rows($que);
+		$que = db()->query("select * from $tbl");
+		$My = $que->num_rows();
 		if($My > $lim)
 		{
 		$tbl_name=$tbl;	
 		$adjacents = 3;
 		$query = "SELECT COUNT(*) as num FROM $tbl_name";
-		$total_pages = mysql_fetch_array(mysql_query($query));
+		$total_pages = db()->query($query)->fetch_array();
 		$total_pages = $total_pages['num'];
 		
 		/* Setup vars for query. */
@@ -983,7 +986,7 @@ div.pagination span.current {
 		
 		/* Get data. */
 		$sql = "SELECT * FROM $tbl_name LIMIT $start, $limit";
-		$result = mysql_query($sql);
+		$result = db()->query($sql);
 		
 		/* Setup page vars for display. */
 		if ($page == 0) $page = 1;					//if no page var is given, default to 1.
